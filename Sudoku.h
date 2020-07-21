@@ -13,9 +13,8 @@ class Sudoku {
     private:
         int** currentGrid;
         int** initialGrid;
-        bool canBeSolved;
-        bool isSolved;
         int numberOfSteps;
+        float solvingTime; // time in ms
     public:
         Sudoku();
         Sudoku(const std::string& filename);
@@ -25,18 +24,19 @@ class Sudoku {
         bool solve();
         bool printCurrentGrid() const;
         bool printInitialGrid() const;
-        int getValue(const Cell& cell) const;
-        void setValueInCell(int value, const Cell& cell);
         int countEmptyCells() const;
         int getNumberOfSteps() const;
-        bool isSolved() const;
+        float getSolvingTime() const;        
     private:
+        bool doSolveStep();
         bool isValueInRow(int value, int row) const;
         bool isValueInCol(int value, int col) const;
         bool isValueInSquare(int value, const Cell& cell) const;
         bool canInsertValueIntoCell(int value, const Cell& cell) const;
+        int getValue(const Cell& cell) const;
+        void setValueInCell(int value, const Cell& cell);
         PossibleValues getPossibleValues(const Cell& cell) const;
-        CellWithPossibleValues getCellWithFewestPossibilities() const;
+        CellWithPossibleValues getCellWithFewestPossibilities() const; // returns Cell(row, col) OR Cell(-1,-1) if there is no empty cell in the grid
 };
 
 #endif
