@@ -22,8 +22,8 @@ class Sudoku {
         Sudoku(const int grid[9][9]);
         ~Sudoku();
         bool solve();
-        bool printCurrentGrid() const;
-        bool printInitialGrid() const;
+        void printCurrentGrid() const;
+        void printInitialGrid() const;
         int countEmptyCells() const;
         int getNumberOfSteps() const;
         float getSolvingTime() const;        
