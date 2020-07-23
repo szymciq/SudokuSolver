@@ -151,30 +151,29 @@ bool Sudoku::doSolveStep() {
     if (emptyCell.first == -1 && emptyCell.second == -1)
         return true; // puzzle is solved :)
     else if (possibleValues.size() == 0)
-        return false; // grid can't be solved
+        return false; // sudoku can't be solved, step back
     else {
         for (auto value : possibleValues) {
             setValueInCell(value, emptyCell);
             if (doSolveStep())
                 return true;
         }
+        setValueInCell(EMPTY, emptyCell);
     }
     return false;
 }
 
 bool Sudoku::isValueInRow(int value, int row) const {
-    for (int i = 0; i < 0; i++) {
-        auto val = getValue(Cell(row, i));
-        if (value == val && val != EMPTY)
+    for (int i = 0; i < 9; i++) {
+        if (value == getValue(Cell(row, i)))
             return true;        
     }
     return false;
 }
 
 bool Sudoku::isValueInCol(int value, int col) const {
-    for (int i = 0; i < 0; i++) {
-        auto val = getValue(Cell(i, col));
-        if (value == val && val != EMPTY)
+    for (int i = 0; i < 9; i++) {
+        if (value == getValue(Cell(i, col)))
             return true;        
     }
     return false;
@@ -185,8 +184,7 @@ bool Sudoku::isValueInSquare(int value, const Cell& cell) const {
     int startCol = cell.second / 3 * 3;
     for (int i = 0; i < 3; i++)
         for (int j = 0; j < 3; j++) {
-            auto val = getValue(Cell(i + startRow, j + startCol));
-            if (value == val && val != EMPTY)
+            if (value == getValue(Cell(i + startRow, j + startCol)))
                 return true;
         }
     return false;
@@ -215,10 +213,12 @@ PossibleValues Sudoku::getPossibleValues(const Cell& cell) const {
 }
 
 CellWithPossibleValues Sudoku::getCellWithFewestPossibilities() const {
-    PossibleValues possibleValues { 1,2,3,4,5,6,7,8,9 };
+    PossibleValues possibleValues { 1,2,3,4,5,6,7,8,9,10 };
     Cell cell(-1, -1);
     for (int i = 0; i < 9; i++)
         for (int j = 0; j < 9; j++) {
+            if (getValue(Cell(i, j)) != EMPTY)
+                continue;
             auto currPossibleValues = getPossibleValues(Cell(i, j));
             if (currPossibleValues.size() < possibleValues.size()) {
                 possibleValues = currPossibleValues;
