@@ -95,11 +95,32 @@ Sudoku::~Sudoku() {
 }
 
 bool Sudoku::solve() {
+    bool solved = false;
+
     auto startTime = std::chrono::steady_clock::now();
-    bool solved = doSolveStep();
+    if (isSolvable())
+        solved = doSolveStep();
     auto endTime = std::chrono::steady_clock::now();
     solvingTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
     return solved;   
+}
+
+bool Sudoku::isSolvable() {
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 9; j++) {
+            auto value = getValue(Cell(i, j));
+            if (value == 0)
+                continue;
+            else {
+                setValueInCell(EMPTY, Cell(i, j));
+                bool canInsert = canInsertValueIntoCell(value, Cell(i, j));
+                setValueInCell(value, Cell(i, j));
+                if (!canInsert)
+                    return false;
+            }
+        }
+    }
+    return true;
 }
 
 void Sudoku::printCurrentGrid() const {

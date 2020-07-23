@@ -22,6 +22,7 @@ class Sudoku {
         Sudoku(const int grid[9][9]);
         ~Sudoku();
         bool solve();
+        bool isSolvable();
         void printCurrentGrid() const;
         void printInitialGrid() const;
         int countEmptyCells() const;
