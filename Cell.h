@@ -5,7 +5,7 @@ class Cell {
     private:
         int value;
     public:
-        Cell(int value);
+        Cell(int value = EMPTY);
         int getValue() const;
         void setValue(int value);
         bool isEmpty();
