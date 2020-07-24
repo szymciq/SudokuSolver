@@ -125,6 +125,33 @@ void Grid::printGrid() const {
     }
 }
 
+PossibleValues Grid::getPossibleValues(const Point& p) const {
+    PossibleValues possibleValues;
+    for (int i = 1; i <= GRID_SIZE; i++)
+        if (canInsertValueIntoCell(i, p))
+            possibleValues.insert(i);
+    return possibleValues;
+}
+
+PointWithPossibleValues Grid::getCellWithFewestPossibilities() const {
+    PossibleValues possibleValues { 1,2,3,4,5,6,7,8,9,10 };
+    Point p(-1, -1);
+    for (int i = 0; i < 9; i++)
+        for (int j = 0; j < 9; j++) {
+            Point currP(i, j);
+            if (!getCell(currP).isEmpty())
+                continue;
+            auto currPossibleValues = getPossibleValues(currP);
+            if (currPossibleValues.size() < possibleValues.size()) {
+                possibleValues = currPossibleValues;
+                p = currP;
+                if (possibleValues.size() == 0) {
+                    i = j = 9;
+                }
+            }
+        }
+    return PointWithPossibleValues(p, possibleValues);
+}
 
 Grid Grid::generateRandomGrid(int numberOfEmptyCells) {
     if (numberOfEmptyCells < 0)
@@ -138,7 +165,9 @@ Grid Grid::generateRandomGrid(int numberOfEmptyCells) {
     std::uniform_int_distribution<int> randomCoord(0, GRID_SIZE - 1);
     std::uniform_int_distribution<int> randomValue(1, GRID_SIZE);
     
-    //while (randomGrid.countEmptyCells() != numberOfEmptyCells);
+    /*
+        Fill random cells with random values
+    */
 
     return randomGrid;
 }
