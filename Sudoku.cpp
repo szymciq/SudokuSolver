@@ -34,7 +34,7 @@ void Sudoku::solve() {
             std::cout 
                 << "I solved your puzzle in " << numberOfSteps << " steps\n"
                 << "I spent " << time << " ms on it..\n"
-                << "Here is solution for you: \n";
+                << "Solution: \n";
             printGrid();
         } else {
             std::cout 
