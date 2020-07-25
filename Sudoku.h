@@ -6,6 +6,7 @@
 class Sudoku {
     private:
         Grid grid;
+        int numberOfSteps;
     public:
         Sudoku();
         Sudoku(const Grid& grid);

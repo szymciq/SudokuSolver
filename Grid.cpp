@@ -17,7 +17,7 @@ Grid::Grid(const Grid& g)
 : Grid() {
     for (int i = 0; i < GRID_SIZE; i++)
         for (int j = 0; j < GRID_SIZE; j++)
-            getCell(Point(i,j)).setValue(getCell(Point(i,j)).getValue());
+            getCell(Point(i,j)).setValue(g.getCell(Point(i,j)).getValue());
 }
 
 Grid::Grid(const std::string& filename)
@@ -153,11 +153,11 @@ PointWithPossibleValues Grid::getCellWithFewestPossibilities() const {
     return PointWithPossibleValues(p, possibleValues);
 }
 
-Grid Grid::generateRandomGrid(int numberOfEmptyCells) {
-    if (numberOfEmptyCells < 0)
-        numberOfEmptyCells = 0;
-    if (numberOfEmptyCells > GRID_SIZE * GRID_SIZE)
-        numberOfEmptyCells = GRID_SIZE * GRID_SIZE;
+Grid Grid::generateRandomGrid(int numberOfFilledCells) {
+    if (numberOfFilledCells < 0)
+        numberOfFilledCells = 0;
+    if (numberOfFilledCells > GRID_SIZE * GRID_SIZE)
+        numberOfFilledCells = GRID_SIZE * GRID_SIZE;
 
     Grid randomGrid;
     std::random_device rd;
