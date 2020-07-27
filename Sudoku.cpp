@@ -1,6 +1,8 @@
 #include "Sudoku.h"
 #include <chrono>
 #include <iostream>
+#include <algorithm>
+#include <iomanip>
 
 Sudoku::Sudoku()
 : grid(Grid()), numberOfSteps(0) { };
@@ -26,6 +28,7 @@ bool Sudoku::isSolvable() const {
 
 void Sudoku::solve() {
     if (isSolvable()) {
+        std::cout << std::fixed << std::setprecision(4);
         auto startTime = std::chrono::steady_clock::now();
         bool solved = doSolveStep();
         auto finishTime = std::chrono::steady_clock::now();
@@ -33,14 +36,14 @@ void Sudoku::solve() {
         if (solved) {
             std::cout 
                 << "I solved your puzzle in " << numberOfSteps << " steps\n"
-                << "I spent " << time << " ms on it..\n"
+                << "I spent " << time / 1000 << " s on it..\n"
                 << "Solution: \n";
             printGrid();
         } else {
             std::cout 
                 << "This puzzle is too hard for me :(\n"
                 << "After " << numberOfSteps << " steps I think it's impossible to solve it!\n"
-                << "I spent " << time << " ms on it..\n";
+                << "I spent " << time / 1000 << " s on it..\n";
         }
     } else {
         std::cout 
@@ -58,6 +61,7 @@ bool Sudoku::doSolveStep() {
         if (possibleValues.size() == 0)
             return false;
         else {
+            std::random_shuffle(possibleValues.begin(), possibleValues.end()); // solution repeats less frequently
             for (auto value : possibleValues) {
                 grid.getCell(p).setValue(value);
                 if (doSolveStep()) {

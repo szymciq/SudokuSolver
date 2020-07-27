@@ -3,7 +3,8 @@
 #include <cmath>
 #include <utility>
 #include <chrono>
-#include <random>
+#include <vector>
+#include <algorithm>
 #include "Grid.h"
 
 Grid::Grid() {
@@ -129,7 +130,7 @@ PossibleValues Grid::getPossibleValues(const Point& p) const {
     PossibleValues possibleValues;
     for (int i = 1; i <= GRID_SIZE; i++)
         if (canInsertValueIntoCell(i, p))
-            possibleValues.insert(i);
+            possibleValues.push_back(i);
     return possibleValues;
 }
 
@@ -153,21 +154,41 @@ PointWithPossibleValues Grid::getCellWithFewestPossibilities() const {
     return PointWithPossibleValues(p, possibleValues);
 }
 
+Grid Grid::operator=(const Grid& g) {
+    for (int i = 0; i < GRID_SIZE; i++)
+        for (int j = 0; j < GRID_SIZE; j++)
+            getCell(Point(i, j)).setValue(g.getCell(Point(i, j)).getValue());
+    return *this;
+}
+
 Grid Grid::generateRandomGrid(int numberOfFilledCells) {
     if (numberOfFilledCells < 0)
         numberOfFilledCells = 0;
-    if (numberOfFilledCells > GRID_SIZE * GRID_SIZE)
-        numberOfFilledCells = GRID_SIZE * GRID_SIZE;
+    if (numberOfFilledCells > (GRID_SIZE * GRID_SIZE) / 2)
+        numberOfFilledCells = GRID_SIZE * GRID_SIZE / 2;
 
     Grid randomGrid;
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> randomCoord(0, GRID_SIZE - 1);
-    std::uniform_int_distribution<int> randomValue(1, GRID_SIZE);
     
-    /*
-        Fill random cells with random values
-    */
+    int numberOfEmptyCells = (GRID_SIZE * GRID_SIZE) - numberOfFilledCells;
+    while (!randomGrid.fillCells(numberOfEmptyCells))
+        continue;
 
     return randomGrid;
+}
+
+bool Grid::fillCells(int numberOfEmptyCells) {
+    if (countEmptyCells() <= numberOfEmptyCells)
+        return true;
+    Point p(getRandom(0, GRID_SIZE - 1), getRandom(0, GRID_SIZE - 1));
+    while (!getCell(p).isEmpty())
+        p = Point(getRandom(0, GRID_SIZE - 1), getRandom(0, GRID_SIZE - 1));
+    PossibleValues possibleValues = getPossibleValues(p);
+    std::random_shuffle(possibleValues.begin(), possibleValues.end());
+    for (auto value : possibleValues) {
+        getCell(p).setValue(value);
+        if (fillCells(numberOfEmptyCells))
+            return true;
+    }
+    getCell(p).setValue(EMPTY);
+    return false;
 }

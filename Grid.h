@@ -24,7 +24,11 @@ class Grid {
         void printGrid() const;
         PossibleValues getPossibleValues(const Point& p) const;
         PointWithPossibleValues getCellWithFewestPossibilities() const;
-        static Grid generateRandomGrid(int numberOfFilledCells = 0);
+        Grid operator=(const Grid& g);
+        static Grid generateRandomGrid(int numberOfCellsToFill = 0); // fill up to 50% cells
+
+        private:
+        bool fillCells(int numberOfEmptyCells);        
 };
 
 #endif
